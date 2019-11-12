@@ -3,10 +3,10 @@ const bodyParser = require('body-parser')
 const createReport = require('docx-templates')
 const toPdf = require('office-to-pdf')
 
-const app = express()
+const app = express();
 
 // POST parsing
-app.use(bodyParser.json({limit: '50mb'}))
+app.use(bodyParser.json({limit: '50mb'}));
 
 // CORS support
 app.use(function(req, res, next) {
@@ -34,18 +34,19 @@ app.post('/docx/pdf', (req, res) => {
             status: 'error',
             errors: ['' + err]
           })
-        })
+        });
     })
     .catch(err => {
       res.json({
         status: 'error',
         errors: ['' + err]
-      })
-    })
-})
+      });
+    });
+});
 
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`)
-})
+});
 
-app.listen(80)
+console.log("Listening...")
+app.listen(8000)
