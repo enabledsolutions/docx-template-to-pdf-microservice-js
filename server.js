@@ -15,26 +15,38 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.post('/docx/pdf', (req, res) => {
-  createReport({
+function createReportPromise(req) {
+  return createReport({
     template: Buffer.from(req.body.file, 'base64'),
     output: 'buffer',
     data: req.body.data || {},
+  });
+}
+
+app.post('/docx', (req, res) => {
+  createReportPromise(req)
+  .then(buffer => {
+    res.json({
+      status: 'ok',
+      file: buffer.toString('base64')
+    });
   })
+  .catch(err => {
+    res.json({
+      status: 'error',
+      errors: ['' + err]
+    });
+  });
+});
+
+app.post('/docx/pdf', (req, res) => {  
+  createReportPromise(req)
+    .then(buffer => toPdf(buffer))
     .then(buffer => {
-      toPdf(buffer)
-        .then(buffer => {
-          res.json({
-            status: 'ok',
-            file: buffer.toString('base64')
-          })
-        })
-        .catch(err => {
-          res.json({
-            status: 'error',
-            errors: ['' + err]
-          })
-        });
+      res.json({
+        status: 'ok',
+        file: buffer.toString('base64')
+      });
     })
     .catch(err => {
       res.json({
