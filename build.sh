@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=1.1
+VERSION=1.2
 TAG=enabledsolutions/docx-template-to-pdf:${VERSION}
 
 docker build -t ${TAG} .
